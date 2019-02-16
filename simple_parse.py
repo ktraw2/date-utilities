@@ -13,11 +13,11 @@ def parse_raw_date_string(date_string: str):
     :return: A tuple consisting of a datetime that was parsed from date_string and a boolean indicating if the date
              string contained hours or minutes based on trailing whitespace.
     """
-    no_hours_and_minutes = False
+    hours_and_minutes = True
     if date_string[len(date_string) - 1] == " ":
         parsed_date = datetime.strptime(date_string, "%Y-%m-%d ")
-        no_hours_and_minutes = True
+        hours_and_minutes = False
     else:
         parsed_date = datetime.strptime(date_string, "%Y-%m-%d %H:%M")
 
-    return parsed_date, no_hours_and_minutes
+    return parsed_date, hours_and_minutes
