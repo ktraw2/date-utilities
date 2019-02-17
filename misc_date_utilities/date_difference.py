@@ -2,7 +2,7 @@
 This file provides functionality for subtracting two dates from each other.
 """
 from datetime import datetime
-import simple_parse
+from misc_date_utilities import simple_parse
 import pytz
 import calendar
 

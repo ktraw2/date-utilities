@@ -2,7 +2,7 @@
 This file contains some unit tests to test the date subtraction. They should account for most edge cases.
 """
 import unittest
-from date_difference import DateDifference
+from misc_date_utilities.date_difference import DateDifference
 
 timezone = "America/Los_Angeles"
 
