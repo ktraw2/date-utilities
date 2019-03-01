@@ -238,4 +238,4 @@ class DateDifference:
         date_difference = DateDifference.subtract_datetimes(date_1, date_2)
         date_difference.hours_and_minutes = hours_and_minutes
 
-        return str(date_difference)
+        return date_difference

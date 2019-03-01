@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="misc-date-utilities",
-    version="1.0.4",
+    version="1.0.5",
     description="Date subtraction, parsing, and random timestamp generation.",
     author="Kevin Traw",
     author_email="ktraw2@gmail.com",
