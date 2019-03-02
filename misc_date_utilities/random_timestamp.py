@@ -1,7 +1,6 @@
 """
 This file provides functionality for getting a random time within a specified range.
 """
-from datetime import datetime
 import random
 
 
@@ -12,7 +11,7 @@ def generate_random_timestamp(hours, minutes, seconds):
     :param hours: the hours component of the exclusive upper bound of the timestamp
     :param minutes: the minutes component of the exclusive upper bound of the timestamp
     :param seconds: the seconds component of the exclusive upper bound of the timestamp
-    :return: a datetime containing the randomly generated timestamp in the hours, minutes, and seconds fields
+    :return: the randomly generated timestamp in the hours, minutes, and seconds
     """
     random_hours = 0
     random_minutes = 0
@@ -39,4 +38,4 @@ def generate_random_timestamp(hours, minutes, seconds):
     elif hours == 0 and minutes == 0 and seconds > 0:
         random_seconds = random.randint(0, seconds)
 
-    return datetime(hour=random_hours, minute=random_minutes, second=random_seconds)
+    return random_hours, random_minutes, random_seconds
