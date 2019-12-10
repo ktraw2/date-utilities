@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="misc-date-utilities",
-    version="1.0.6",
+    version="1.0.7",
     description="Date subtraction, parsing, and random timestamp generation.",
     author="Kevin Traw",
     author_email="ktraw2@gmail.com",
@@ -17,5 +17,5 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
-    install_requires=["pytz"],
+    install_requires=["dateutil"],
 )

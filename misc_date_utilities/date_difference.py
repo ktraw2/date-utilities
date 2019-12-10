@@ -2,8 +2,8 @@
 This file provides functionality for subtracting two dates from each other.
 """
 from datetime import datetime
+from dateutil.tz import tz
 from misc_date_utilities import simple_parse
-import pytz
 import calendar
 
 
@@ -108,6 +108,20 @@ class DateDifference:
         :param date_2: A datetime that will be on the right side of the subtraction.
         :return: A DateDifference holding the difference between the two dates.
         """
+        if date_1.tzinfo is not None:
+            date_1 = date_1.astimezone(tz.tzutc())
+
+            if date_2.tzinfo is not None:
+                date_2 = date_2.astimezone(tz.tzutc())
+            else:
+                raise AttributeError("date_1 has timezone information, but date_2 does not. "
+                                     "date_1 and date_2 must either both have timezone information, or neither of them "
+                                     " must have timezone information.")
+        elif date_2.tzinfo is not None:
+            raise AttributeError("date_2 has timezone information, but date_1 does not. "
+                                 "date_1 and date_2 must either both have timezone information, or neither of them "
+                                 " must have timezone information.")
+
         if date_1 >= date_2:
             bigger = date_1
             smaller = date_2
@@ -208,7 +222,7 @@ class DateDifference:
         return DateDifference(year_difference, month_difference, day_difference, hour_difference, minute_difference)
 
     @staticmethod
-    def subtract_datestrings(date_string_1: str, date_string_2: str, timezone: str = "UTC"):
+    def subtract_datestrings(date_string_1: str, date_string_2: str, timezone_1: str = "UTC", timezone_2: str = "UTC"):
         """
         Used if you want to pass in dates and times as strings and/or if you want the difference between two dates to be
         automatically formatted as a string. Input must be formatted as "YYYY-MM-DD HH:MM" (24 hour time) or "YYYY-MM-DD "
@@ -216,26 +230,42 @@ class DateDifference:
         to use the current date and time. Note that if you do this, you can pass in the timezone, or just use UTC, which
         is the default timezone.
 
-        :param date_string_1: The string that consists of the date to go on the left side of the subtraction.
-        :param date_string_2: The string that consists of the date to go on the right side of the subtraction.
-        :param timezone: Optional, used if one of the two date strings holds the value "now" to determine which timezone to
-                          get the current time in. Defaults to "UTC".
+        :param date_string_1: The string that consists of the date to go on the left side of the subtraction,
+                              does not contain any timezone info.
+        :param date_string_2: The string that consists of the date to go on the right side of the subtraction,
+                              does not contain any timezone info.
+        :param timezone_1: The timezone to interpret date_string_1 as. Defaults to "UTC".
+        :param timezone_2: The timezone to interpret date_string_2 as. Defaults to "UTC".
         :return: A formatted output string consisting of the difference between the two dates given by the date strings.
         """
         hours_and_minutes = True
         if not date_string_1 == "now":
             date_1, hours_and_minutes = simple_parse.parse_raw_date_string(date_string_1)
+            date_1 = date_1.replace(tzinfo=tz.gettz(timezone_1))
         else:
-            date_1 = datetime.now(pytz.timezone(timezone)).replace(microsecond=0, tzinfo=None)
+            date_1 = datetime.now(tz.gettz(timezone_1))
+
+        date_1 = date_1.replace(microsecond=0)
 
         if not date_string_2 == "now":
             date_2, compare = simple_parse.parse_raw_date_string(date_string_2)
+            date_2 = date_2.replace(tzinfo=tz.gettz(timezone_2))
             if hours_and_minutes:
                 hours_and_minutes = compare
         else:
-            date_2 = datetime.now(pytz.timezone(timezone)).replace(microsecond=0, tzinfo=None)
+            date_2 = datetime.now(tz.gettz(timezone_2))
+
+        date_2 = date_2.replace(microsecond=0)
 
         date_difference = DateDifference.subtract_datetimes(date_1, date_2)
         date_difference.hours_and_minutes = hours_and_minutes
 
         return date_difference
+
+    @staticmethod
+    def utc_now():
+        """
+        Helper method that just gets the current datetime in UTC with tzinfo in place
+        :return: the current datetime in UTC with tzinfo in place
+        """
+        return datetime.now(tz.tzutc())
